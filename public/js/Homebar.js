@@ -5,6 +5,7 @@ class HomeBar extends HTMLElement {
     const heading = this.getAttribute("heading") || "";
     const crumb = this.getAttribute("crumb") || "";
     const username = this.getAttribute("username") || "";
+    const color = this.getAttribute("color") || "red";
     this._info = {};
     let now = new Date();
     let datestr = now.toDateString();
@@ -12,12 +13,7 @@ class HomeBar extends HTMLElement {
     this._root.innerHTML = `
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <div id="home">
-        <div id="menu">
-        <i class="material-icons">menu</i>
-            <ul>
-              <slot><li>simple menu</li></slot>
-            </ul>
-        </div>
+        <div id="menu"></div>
         <div id="heading">${heading}</div>
         <div id="crumb">${crumb}</div>
         <div id="username">${username}</div>
@@ -34,11 +30,7 @@ class HomeBar extends HTMLElement {
                 /*overflow:hidden;*/
             }
 
-            div#menu {
-              place-self:center left;
-            }
-
-            div#menu ul,
+            div#menu > ul,
             div#info > ul {
               text-align: left;
               visibility: hidden;
@@ -56,12 +48,11 @@ class HomeBar extends HTMLElement {
               padding: 5px;
             }
 
-            div#menu:hover ul,
+            div#menu:hover > ul,
             div#info:hover > ul {
                visibility: visible;
             }
-            ::slotted(li:hover),
-            div#menu slot:hover,
+            div#menu > ul > li:hover,
             div#info > ul > li:hover {
               background: rgb(32,166,231);
             }
@@ -85,30 +76,18 @@ class HomeBar extends HTMLElement {
             #home i.material-icons {
               font-size: 32px;
             }
-            @media not (screen and (-webkit-device-pixel-ratio: 1)) {
-              #username , #info, #crumb { display:none; }
-              #home {grid-template-columns: 1fr 1fr 3fr;}
-            }
-            @media screen and (max-width: 750px) {
-              #username , #info { display:none; }
-              #home {grid-template-columns: 1fr  1fr 3fr;}
-            }
             @media screen and (max-width: 550px) {
-              #username , #info, #crumb { display:none; }
-              #home {grid-template-columns: 1fr 2fr; }
+              #username , #info { display:none; }
+              #home {grid-template-columns: 1fr 1fr 3fr;}
             }
           </style>
         `;
        
-        this._root.querySelector("#crumb").addEventListener("click", () => this.dispatchEvent(new Event("crumb")));
+        this._root.querySelector("#crumb").addEventListener("click", () => this.dispatchEvent(new Event("home")));
         this._root.querySelector("#menu").addEventListener("click", (e) => {
           let t = e.target;
           this._info.target = t;
-          if (t.localName === "li" && t.dataset.link) {
-            let link = t.dataset.link;
-            location.href = `${link}.html`;
-          } else
-          this.dispatchEvent(new Event("menu"));
+          this.dispatchEvent(new Event("menu"))
         });
         this._root.querySelector("#info").addEventListener("click", (e) => {
           let t = e.target;
