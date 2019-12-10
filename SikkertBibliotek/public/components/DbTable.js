@@ -44,7 +44,7 @@
               font-weight:bold;
             }
             tr.selected {
-              box-shadow: inset 0 0 5px blue;
+              box-shadow: inset 0 0 5px green;
             }
             table.error thead tr {
               box-shadow: inset 0 0 5px red, 0 0 0 orange;
